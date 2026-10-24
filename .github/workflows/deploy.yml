@@ -1,0 +1,19 @@
+name: App CI/CD - SENAC
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Autenticar na AWS
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+    - name: Ligar ao Cluster EKS
+      run: |
+        aws eks update-kubeconfig --region us-east-2 --name cluster-app-senac-aws
+        echo "Autenticação e ligação ao cluster concluídas com sucesso!"
